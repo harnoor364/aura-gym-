@@ -1,0 +1,51 @@
+---
+import Wordmark from "./Wordmark.astro";
+import { site, mapsLinks } from "../data/site";
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-mark"><Wordmark size="lg" /></div>
+    <div class="grid footer-cols">
+      <div class="footer-col">
+        <p class="label muted">Visit</p>
+        <address>{site.address.street}<br />{site.address.area}<br />{site.address.city}, {site.address.region} {site.address.postalCode}</address>
+        <a class="link-arrow" href={mapsLinks.directions} target="_blank" rel="noopener">Directions</a>
+      </div>
+      <div class="footer-col">
+        <p class="label muted">Call</p>
+        <a class="footer-phone" href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
+      </div>
+      <nav class="footer-col" aria-label="Footer">
+        <p class="label muted">Explore</p>
+        <ul role="list">
+          <li><a href="#facilities">Facilities</a></li>
+          <li><a href="#training">Training</a></li>
+          <li><a href="#experience">The Experience</a></li>
+          <li><a href="#location">Location</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <p>© {year} {site.name}. All rights reserved.</p>
+      {site.preview && <p>Proposed branch website concept for review. Official website: <a href={site.officialSite} rel="noopener">auragyms.com</a></p>}
+      <p>Website concept by Harnoor Singh</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--ink); border-top: 1px solid var(--line); padding: clamp(4rem, 8vw, 7rem) 0 calc(2rem + env(safe-area-inset-bottom)); overflow: hidden; }
+  .footer-mark { margin-bottom: clamp(3rem, 6vw, 5rem); }
+  .footer-cols { row-gap: var(--s-6); padding-block: var(--s-7); border-top: 1px solid var(--line); }
+  .footer-col { grid-column: span 4; display: grid; gap: var(--s-3); align-content: start; justify-items: start; }
+  .footer-col address { font-style: normal; color: var(--stone); line-height: 1.6; }
+  .footer-col ul { list-style: none; display: grid; gap: var(--s-2); }
+  .footer-col a:not(.link-arrow) { text-decoration: none; color: var(--stone); }
+  .footer-col a:hover { color: var(--ember); }
+  .footer-phone { font-size: var(--t-xl); font-weight: 600; }
+  .footer-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3) var(--s-6); padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: 0.8125rem; color: var(--ash); }
+  .footer-base a { color: var(--stone); }
+  @media (max-width: 720px) { .footer-col { grid-column: 1 / -1; } }
+</style>

@@ -1,0 +1,88 @@
+---
+/**
+ * Photo — renders the real photo for a slot if one exists in src/assets/photos/,
+ * otherwise an art-directed placeholder that doubles as the shot brief.
+ */
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { photos } from "../data/photos";
+
+interface Props {
+  slot: keyof typeof photos;
+  /** Responsive `sizes` attribute for the real photo. */
+  sizes?: string;
+  /** Load eagerly (hero / above the fold). */
+  priority?: boolean;
+  class?: string;
+  /** Displayed number on the placeholder, e.g. "03". */
+  number?: string;
+}
+
+const { slot, sizes = "100vw", priority = false, class: className = "", number } = Astro.props;
+const meta = photos[slot];
+
+const files = import.meta.glob<{ default: ImageMetadata }>("../assets/photos/*.{jpg,jpeg,png,webp}", { eager: true });
+const match = Object.entries(files).find(([path]) => path.split("/").pop()!.replace(/\.[^.]+$/, "") === meta.id);
+const image = match?.[1].default;
+
+const motifs: Record<string, string> = {
+  // Simple line drawings, 400×300 viewBox. Deliberately schematic.
+  weights: `
+    <path d="M40 240h320" />
+    <path d="M70 240V90M330 240V90M60 110h20M320 110h20M60 170h20M320 170h20" />
+    <path d="M30 130h340" stroke-width="5" />
+    <rect x="92" y="96" width="14" height="68" rx="3" /><rect x="110" y="104" width="10" height="52" rx="2" />
+    <rect x="294" y="96" width="14" height="68" rx="3" /><rect x="280" y="104" width="10" height="52" rx="2" />
+    <circle cx="150" cy="222" r="18" /><circle cx="150" cy="222" r="4" /><circle cx="192" cy="226" r="14" /><circle cx="226" cy="228" r="12" />`,
+  cardio: `
+    <path d="M20 240h360" />
+    <path d="M40 240l30-46h70l18 46M70 194l26-74h10M96 120h26" /><path d="M150 240l30-46h70l18 46M180 194l26-74h10M206 120h26" />
+    <path d="M260 240l30-46h70l18 46M290 194l26-74h10M316 120h26" opacity=".6" />`,
+  functional: `
+    <path d="M20 248h360" />
+    <path d="M96 248c-24 0-30-18-30-34 0-22 14-36 30-36s30 14 30 36c0 16-6 34-30 34z" /><path d="M80 182c0-18 32-18 32 0" />
+    <path d="M172 248c-20 0-25-15-25-28 0-18 11-30 25-30s25 12 25 30c0 13-5 28-25 28z" /><path d="M159 194c0-15 26-15 26 0" />
+    <path d="M250 40c0 80 40 120 40 208M262 40c0 80 40 120 40 208" /><path d="M244 40h24" stroke-width="4" />`,
+  studio: `
+    <path d="M20 250h360M20 250l70-50h220l70 50" />
+    <rect x="60" y="40" width="80" height="150" /><rect x="160" y="40" width="80" height="150" /><rect x="260" y="40" width="80" height="150" />
+    <path d="M90 228h60M180 228h60M270 228h40" opacity=".6" />`,
+  lockers: `
+    <path d="M20 250h360" />
+    ${Array.from({ length: 6 }, (_, i) => `<rect x="${40 + i * 54}" y="50" width="48" height="190" /><path d="M${54 + i * 54} 140h18" /><path d="M${44 + i * 54} 66h40M${44 + i * 54} 72h40" opacity=".5"/>`).join("")}`,
+  front: `
+    <path d="M10 250h380" />
+    <path d="M60 250V80h280v170" /><path d="M60 80l140-36 140 36" opacity=".5" />
+    <rect x="160" y="150" width="80" height="100" /><path d="M200 150v100" />
+    <rect x="86" y="110" width="50" height="50" /><rect x="264" y="110" width="50" height="50" />
+    <rect x="130" y="92" width="140" height="22" stroke-width="2.5" />`,
+  pool: `<path d="M20 120c40-14 80 14 120 0s80 14 120 0 80 14 120 0M20 170c40-14 80 14 120 0s80 14 120 0 80 14 120 0M20 220c40-14 80 14 120 0s80 14 120 0 80 14 120 0" />`,
+  people: `
+    <path d="M20 250h360" />
+    <path d="M70 250 140 60M150 250 190 60M250 250 210 60M330 250 260 60" opacity=".5" />
+    <path d="M120 40h160" stroke-width="5" /><rect x="104" y="24" width="12" height="32" rx="2" /><rect x="284" y="24" width="12" height="32" rx="2" />`,
+};
+---
+
+{image ? (
+  <Picture
+    src={image}
+    alt={meta.alt}
+    formats={["avif", "webp"]}
+    widths={[480, 800, 1200, 1600, 2200].filter((w) => w <= image.width)}
+    sizes={sizes}
+    loading={priority ? "eager" : "lazy"}
+    fetchpriority={priority ? "high" : "auto"}
+    class:list={["photo", className]}
+    style={meta.focus ? `object-position:${meta.focus}` : undefined}
+  />
+) : (
+  <figure class:list={["photo ph", className]} data-light={meta.light ?? "top"} role="img" aria-label={`Photo placeholder: ${meta.alt}`}>
+    <svg class="ph-motif" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true" set:html={motifs[meta.motif]} />
+    <figcaption class="ph-label" aria-hidden="true">
+      <span class="ph-tag">{number ? `Photo ${number}` : "Photo"} · to be supplied</span>
+      <span class="ph-brief">{meta.brief}</span>
+      <span class="ph-file">src/assets/photos/{meta.id}.jpg</span>
+    </figcaption>
+  </figure>
+)}

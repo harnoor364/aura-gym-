@@ -1,0 +1,205 @@
+---
+import Icon from "./Icon.astro";
+import { site, fullAddress, mapsLinks, formMode, askAbout } from "../data/site";
+---
+<section class="section visit" id="location" aria-labelledby="loc-title">
+  <div class="wrap grid loc">
+    <div class="loc-copy">
+      <p class="index-label label" data-reveal><b>07</b> Location</p>
+      <h2 class="display h2" id="loc-title" data-reveal>Lodhi Club Road,<br />BRS Nagar.</h2>
+      <address class="loc-address" data-reveal>
+        {site.address.street}<br />
+        {site.address.area}<br />
+        {site.address.city}, {site.address.region} {site.address.postalCode}
+      </address>
+      <dl class="loc-facts" data-reveal>
+        <div><dt class="label muted">Phone</dt><dd><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a></dd></div>
+        <div>
+          <dt class="label muted">Hours</dt>
+          <dd>
+            {site.hours.verified && site.hours.lines.length
+              ? site.hours.lines.map((h) => <span class="loc-hours">{h.days} <span class="muted">{h.time}</span></span>)
+              : <span>Please call to confirm current hours</span>}
+          </dd>
+        </div>
+      </dl>
+      <div class="loc-actions" data-reveal>
+        <a class="btn" href={mapsLinks.directions} target="_blank" rel="noopener">Get directions <Icon name="arrow-up-right" /></a>
+        <a class="btn btn--ghost" href={mapsLinks.listing} target="_blank" rel="noopener">Open in Google Maps</a>
+      </div>
+    </div>
+
+    <div class="loc-map" data-map data-reveal="fade">
+      <button class="map-load" type="button" data-map-load data-src={mapsLinks.embed}>
+        <span class="map-grid" aria-hidden="true"></span>
+        <span class="map-pin" aria-hidden="true"><Icon name="pin" /></span>
+        <span class="map-cta label">Load interactive map</span>
+        <span class="map-note">Loads Google Maps · {site.address.street}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap contact" id="contact" aria-labelledby="contact-title">
+    <div class="grid contact-grid">
+      <div class="contact-copy">
+        <p class="index-label label" data-reveal><b>08</b> Contact</p>
+        <h2 class="display contact-title" id="contact-title" data-reveal>Ready when<br /><span class="accent">you are.</span></h2>
+        <p class="lede muted" data-reveal>The quickest way to ask about membership is a call to the branch.</p>
+        <a class="contact-phone display" href={`tel:${site.phone.tel}`} data-reveal>
+          <Icon name="phone" /><span>{site.phone.display}</span>
+        </a>
+      </div>
+
+      {formMode !== "none" ? (
+        <form
+          class="enquiry"
+          name="enquiry"
+          method="POST"
+          action={formMode === "netlify" ? "/thank-you/" : site.form.endpoint}
+          data-enquiry
+          data-mode={formMode}
+          data-endpoint={site.form.endpoint}
+          novalidate
+          {...(formMode === "netlify" ? { "data-netlify": "true", "netlify-honeypot": "company" } : {})}
+        >
+          <input type="hidden" name="form-name" value="enquiry" />
+          <p class="hp" aria-hidden="true"><label>Company <input name="company" tabindex="-1" autocomplete="off" /></label></p>
+          <p class="label accent form-kicker">Request a call back</p>
+
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" autocomplete="name" required maxlength="80" aria-describedby="e-name" />
+            <p class="field-err" id="e-name" data-err="name"></p>
+          </div>
+          <div class="field">
+            <label for="f-phone">Mobile number</label>
+            <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" aria-describedby="e-phone" />
+            <p class="field-err" id="e-phone" data-err="phone"></p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-interest">Interested in</label>
+              <select id="f-interest" name="interest">
+                <option>Membership options</option>
+                <option>Strength &amp; resistance</option>
+                <option>Cardio &amp; conditioning</option>
+                {askAbout.map((a) => <option>{a.title}</option>)}
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-time">Best time to call</label>
+              <select id="f-time" name="time">
+                <option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-message">Message <span class="muted">(optional)</span></label>
+            <textarea id="f-message" name="message" rows="3" maxlength="800"></textarea>
+          </div>
+          <div class="field field--check">
+            <input id="f-consent" name="consent" type="checkbox" value="yes" aria-describedby="e-consent" />
+            <label for="f-consent">You may call me about this enquiry.</label>
+            <p class="field-err" id="e-consent" data-err="consent"></p>
+          </div>
+          <button class="btn" type="submit" data-submit>Send enquiry <Icon name="arrow" /></button>
+          <p class="form-status" role="status" aria-live="polite" data-status hidden></p>
+        </form>
+      ) : (
+        <div class="enquiry enquiry--call" data-reveal>
+          <p class="label accent form-kicker">How to enquire</p>
+          <ol class="call-steps" role="list">
+            <li><span class="display">01</span><p>Call <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a> and ask about membership options.</p></li>
+            <li><span class="display">02</span><p>Ask about timings and any classes or coaching you are interested in.</p></li>
+            <li><span class="display">03</span><p>Visit Lodhi Club Road to see the floor before you join.</p></li>
+          </ol>
+          <a class="btn" href={`tel:${site.phone.tel}`}><Icon name="phone" /> Call the branch</a>
+          {site.preview && <p class="call-note label muted">Preview note: an online enquiry form appears here once a form service is connected (see README).</p>}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .visit { background: var(--ink); }
+  .loc { row-gap: var(--s-7); align-items: stretch; }
+  .loc-copy { grid-column: 1 / span 5; display: grid; gap: var(--s-6); align-content: start; }
+  .loc-address { font-style: normal; font-size: var(--t-lg); line-height: 1.55; }
+  .loc-facts { margin: 0; display: grid; gap: var(--s-4); border-top: 1px solid var(--line); padding-top: var(--s-5); }
+  .loc-facts div { display: grid; grid-template-columns: 6rem 1fr; gap: var(--s-4); align-items: baseline; }
+  .loc-facts dd { margin: 0; }
+  .loc-facts a { text-decoration: none; font-weight: 600; }
+  .loc-facts a:hover { color: var(--ember); }
+  .loc-hours { display: block; }
+  .loc-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+  .loc-map { grid-column: 7 / span 6; position: relative; min-height: 460px; background: var(--char); overflow: hidden; }
+  .loc-map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(1) invert(0.92) contrast(0.9); }
+  .map-load {
+    position: absolute; inset: 0; width: 100%; display: grid; place-content: center; justify-items: center; gap: var(--s-3);
+    background: none; border: 0; color: var(--bone); cursor: pointer; text-align: center; padding: var(--s-6);
+  }
+  .map-grid {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(32deg, transparent 47%, rgb(243 239 232 / 0.16) 47.5%, rgb(243 239 232 / 0.16) 49%, transparent 49.5%),
+      linear-gradient(-58deg, transparent 60%, rgb(243 239 232 / 0.1) 60.5%, rgb(243 239 232 / 0.1) 62%, transparent 62.5%);
+    opacity: 0.6;
+  }
+  .map-pin { position: relative; display: grid; place-items: center; width: 64px; height: 64px; background: var(--ember); color: var(--ink); }
+  .map-pin :global(svg) { width: 28px; height: 28px; }
+  .map-cta { position: relative; margin-top: var(--s-3); border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+  .map-note { position: relative; font-size: var(--t-sm); color: var(--ash); }
+  .map-load:hover .map-cta { color: var(--ember); }
+
+  .contact { margin-top: var(--section); }
+  .contact-grid { row-gap: var(--s-7); align-items: start; border-top: 1px solid var(--line); padding-top: clamp(3rem, 6vw, 5rem); }
+  .contact-copy { grid-column: 1 / span 6; display: grid; gap: var(--s-6); justify-items: start; }
+  .contact-title { font-size: var(--t-3xl); }
+  .contact-phone {
+    display: inline-flex; align-items: center; gap: 0.3em; text-decoration: none;
+    font-size: clamp(2.25rem, 1rem + 4.5vw, 4.75rem); line-height: 1; letter-spacing: 0;
+    border-bottom: 2px solid var(--ember); padding-bottom: 0.1em;
+  }
+  .contact-phone :global(svg) { width: 0.6em; height: 0.6em; color: var(--ember); }
+  .contact-phone:hover { color: var(--ember); }
+
+  .enquiry { grid-column: 8 / span 5; display: grid; gap: var(--s-5); padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--char); border: 1px solid var(--line); }
+  .form-kicker { margin-bottom: var(--s-2); }
+  .field { display: grid; gap: var(--s-2); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+  .field label { font-size: var(--t-sm); font-weight: 600; }
+  .field input, .field select, .field textarea {
+    width: 100%; min-height: 50px; padding: 0.75rem 0.9rem; border-radius: 0;
+    background: var(--ink); border: 1px solid rgb(243 239 232 / 0.22); color: var(--bone);
+  }
+  .field textarea { resize: vertical; min-height: 96px; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember); }
+  .field [aria-invalid="true"] { border-color: #ff8a6a; }
+  .field-err { font-size: 0.8125rem; color: #ff9b80; }
+  .field-err:empty { display: none; }
+  .field--check { grid-template-columns: auto 1fr; align-items: start; column-gap: var(--s-3); }
+  .field--check input { width: 22px; height: 22px; min-height: 0; margin-top: 1px; accent-color: var(--ember); }
+  .field--check label { font-weight: 400; color: var(--ash); }
+  .field--check .field-err { grid-column: 1 / -1; }
+  .form-status { padding: var(--s-4); font-size: var(--t-sm); border: 1px solid var(--line); }
+  .form-status.is-ok { border-color: #6fbf8a; }
+  .form-status.is-error { border-color: #ff8a6a; }
+  .form-status a { color: var(--ember); }
+  .hp { position: absolute; left: -9999px; }
+
+  .call-steps { list-style: none; display: grid; gap: var(--s-5); }
+  .call-steps li { display: grid; grid-template-columns: 3rem 1fr; gap: var(--s-4); align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: var(--s-5); }
+  .call-steps span { font-size: var(--t-xl); color: var(--ember); }
+  .call-steps a { font-weight: 600; }
+  .call-note { text-transform: none; letter-spacing: 0.02em; }
+
+  @media (max-width: 900px) {
+    .loc-copy, .loc-map, .contact-copy, .enquiry { grid-column: 1 / -1; }
+    .loc-map { min-height: 340px; }
+  }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+</style>

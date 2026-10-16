@@ -1,0 +1,16 @@
+---
+import Base from "../../layouts/Base.astro";
+import Icon from "../../components/Icon.astro";
+---
+<Base title="Enquiry sent · Aura Gym BRS Nagar" description="Your enquiry has been sent." path="/thank-you/" noindex>
+  <main id="main" class="wrap ty">
+    <p class="label accent">Enquiry received</p>
+    <h1 class="display ty-title">Thank you.</h1>
+    <p class="lede muted">Your enquiry reached the branch. They will call you back on the number you shared.</p>
+    <a class="btn" href="/">Back to the website <Icon name="arrow" /></a>
+  </main>
+</Base>
+<style>
+  .ty { min-height: 100svh; display: grid; align-content: center; justify-items: start; gap: var(--s-6); }
+  .ty-title { font-size: var(--t-hero); }
+</style>

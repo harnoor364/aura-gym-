@@ -1,0 +1,174 @@
+---
+import Wordmark from "./Wordmark.astro";
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
+
+const links = [
+  { href: "#top", label: "Home" },
+  { href: "#facilities", label: "Facilities" },
+  { href: "#training", label: "Training" },
+  { href: "#experience", label: "The Experience" },
+  { href: "#location", label: "Location" },
+  { href: "#contact", label: "Contact" },
+];
+---
+{site.preview && (
+  <div class="preview-bar" role="note">
+    <span class="label">Concept</span>
+    <span>Proposed branch website for owner review<span class="pb-long"> — not the official Aura Gym site</span>.</span>
+  </div>
+)}
+<header class="site-header" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="Aura Gym BRS Nagar — back to top"><Wordmark /></a>
+
+    <nav class="nav" aria-label="Main">
+      <ul class="nav-list" id="site-menu" data-menu>
+        {links.map((l) => (
+          <li><a class="nav-link" href={l.href} data-nav-link>{l.label}</a></li>
+        ))}
+        <li class="nav-menu-extra">
+          <a class="btn" href="#contact">Enquire now <Icon name="arrow" /></a>
+          <a class="nav-phone" href={`tel:${site.phone.tel}`}><Icon name="phone" /> {site.phone.display}</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn header-cta" href="#contact">Enquire</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-toggle>
+        <span class="sr-only" data-menu-label>Open menu</span>
+        <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .preview-bar {
+    position: relative; z-index: 60;
+    display: flex; gap: var(--s-3); align-items: center; justify-content: center; flex-wrap: wrap;
+    padding: 0.55rem var(--gutter); background: var(--bone); color: var(--ink);
+    font-size: 0.8125rem; text-align: center;
+  }
+  .preview-bar .label { color: var(--ember-deep); }
+  @media (max-width: 560px) { .pb-long { display: none; } .preview-bar { font-size: 0.75rem; } }
+
+  .site-header {
+    position: sticky; top: 0; z-index: 50; height: var(--header-h);
+    margin-bottom: calc(var(--header-h) * -1); /* overlay the hero */
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.is-solid { background: rgb(13 13 12 / 0.92); backdrop-filter: blur(10px); border-color: var(--line); }
+  .site-header.is-hidden { transform: translateY(-100%); }
+  /* backdrop-filter would trap the fixed mobile menu inside the header */
+  :global(body.menu-open) .site-header { backdrop-filter: none; background: var(--ink); transform: none; }
+  .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s-6); }
+  .brand { text-decoration: none; }
+
+  .nav-list { display: flex; gap: clamp(1rem, 2vw, 2.25rem); list-style: none; }
+  .nav-link {
+    position: relative; display: inline-block; padding-block: 0.5rem;
+    font-size: var(--t-sm); font-weight: 500; letter-spacing: 0.02em; text-decoration: none; color: var(--bone);
+  }
+  .nav-link::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0.25rem; height: 1px; background: var(--ember);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.35s var(--ease);
+  }
+  .nav-link:hover::after, .nav-link[aria-current="true"]::after { transform: scaleX(1); }
+  .nav-menu-extra { display: none; }
+
+  .header-actions { display: flex; align-items: center; gap: var(--s-3); }
+  .header-cta { min-height: 42px; padding-inline: 1.2em; }
+  .menu-toggle { display: none; }
+
+  @media (max-width: 1080px) {
+    .menu-toggle {
+      display: inline-grid; place-items: center; width: 48px; height: 48px;
+      background: transparent; border: 1px solid var(--line); cursor: pointer; position: relative; z-index: 2;
+    }
+    .menu-icon { display: grid; gap: 7px; width: 20px; }
+    .menu-icon span { height: 1.5px; background: var(--bone); transition: transform 0.3s var(--ease); }
+    .menu-toggle[aria-expanded="true"] .menu-icon span:first-child { transform: translateY(4.25px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] .menu-icon span:last-child { transform: translateY(-4.25px) rotate(-45deg); }
+
+    .nav-list {
+      position: fixed; inset: 0; z-index: 1;
+      flex-direction: column; justify-content: center; gap: 0.25rem;
+      padding: calc(var(--header-h) + 2rem) var(--gutter) 2rem;
+      background: var(--ink);
+      opacity: 0; visibility: hidden; transition: opacity 0.3s var(--ease), visibility 0.3s;
+    }
+    .nav-list.is-open { opacity: 1; visibility: visible; }
+    .nav-link {
+      font-size: clamp(2.25rem, 8vw, 3.5rem); font-stretch: 68%; font-weight: 800; text-transform: uppercase;
+      line-height: 1; padding-block: 0.35rem; letter-spacing: 0;
+    }
+    .nav-menu-extra { display: grid; gap: var(--s-4); margin-top: var(--s-6); justify-items: start; }
+    .nav-phone { display: inline-flex; gap: 0.6em; align-items: center; text-decoration: none; color: var(--ash); }
+    .nav-phone :global(svg) { width: 1.1em; height: 1.1em; }
+  }
+  @media (max-width: 480px) { .header-cta { display: none; } }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]")!;
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]")!;
+  const menu = document.querySelector<HTMLElement>("[data-menu]")!;
+  const label = document.querySelector<HTMLElement>("[data-menu-label]")!;
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+
+  // Solid background once past the hero; hide on scroll down, reveal on scroll up.
+  let lastY = scrollY;
+  const onScroll = () => {
+    const y = scrollY;
+    const threshold = hero ? hero.offsetHeight - 120 : 80;
+    header.classList.toggle("is-solid", y > threshold || document.body.classList.contains("menu-open"));
+    const goingDown = y > lastY + 4;
+    const goingUp = y < lastY - 4;
+    if (y > threshold + 200 && goingDown && !document.body.classList.contains("menu-open")) header.classList.add("is-hidden");
+    else if (goingUp || y < threshold) header.classList.remove("is-hidden");
+    lastY = y;
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Accessible mobile menu
+  const focusables = () => [toggle, ...menu.querySelectorAll<HTMLElement>("a")];
+  const setOpen = (open: boolean) => {
+    toggle.setAttribute("aria-expanded", String(open));
+    label.textContent = open ? "Close menu" : "Open menu";
+    menu.classList.toggle("is-open", open);
+    document.body.classList.toggle("menu-open", open);
+    header.classList.remove("is-hidden");
+    onScroll();
+    // Wait until the menu has become visible before moving focus into it.
+    if (open) setTimeout(() => menu.querySelector<HTMLElement>("a")?.focus(), 60);
+  };
+  toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+  menu.addEventListener("click", (e) => { if ((e.target as Element).closest("a")) setOpen(false); });
+  document.addEventListener("keydown", (e) => {
+    if (!menu.classList.contains("is-open")) return;
+    if (e.key === "Escape") { setOpen(false); toggle.focus(); }
+    if (e.key === "Tab") {
+      const f = focusables();
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  matchMedia("(min-width: 1081px)").addEventListener("change", (m) => m.matches && setOpen(false));
+
+  // Current-section highlighting
+  const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]")];
+  const sections = links.map((a) => document.querySelector<HTMLElement>(a.hash)).filter(Boolean) as HTMLElement[];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      links.forEach((a) => a.toggleAttribute("aria-current", a.hash === `#${en.target.id}`));
+      links.forEach((a) => a.hasAttribute("aria-current") && a.setAttribute("aria-current", "true"));
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach((s) => io.observe(s));
+</script>

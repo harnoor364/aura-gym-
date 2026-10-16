@@ -1,0 +1,77 @@
+---
+import Icon from "./Icon.astro";
+import { site, mapsLinks } from "../data/site";
+const r = site.rating;
+const reviews = site.reviews.filter((x) => x.quote && x.author && x.url);
+---
+<section class="section trust" aria-labelledby="trust-title">
+  <div class="wrap grid trust-grid">
+    <p class="index-label label trust-index" data-reveal><b>05</b> Word of mouth</p>
+
+    <h2 class="display trust-title" id="trust-title" data-reveal>Hear it from<br />members.</h2>
+
+    <div class="trust-body" data-reveal>
+      <p class="lede">We would rather you hear it from the people who train here than from us. Read recent Google reviews — the glowing and the critical — before you decide.</p>
+
+      {r.verified ? (
+        <a class="rating" href={mapsLinks.listing} target="_blank" rel="noopener" aria-label={`Rated ${r.value} out of 5 from ${r.count} Google reviews — opens Google Maps`}>
+          <span class="rating-value display">{r.value.toFixed(1)}</span>
+          <span class="rating-meta">
+            <span class="rating-stars" aria-hidden="true">{Array.from({ length: 5 }, (_, i) => <Icon name="star" class={i < Math.round(r.value) ? "on" : ""} />)}</span>
+            <span class="label muted">{r.count} Google reviews{r.checkedOn && ` · as of ${r.checkedOn}`}</span>
+          </span>
+        </a>
+      ) : site.preview ? (
+        <div class="rating rating--pending" role="note">
+          <span class="label accent">Preview note</span>
+          <span class="muted">The supplied listing reports {r.value}★ from {r.count} reviews. It will be shown here once the current figures are verified.</span>
+        </div>
+      ) : null}
+
+    </div>
+
+    <a class="trust-link display" href={mapsLinks.listing} target="_blank" rel="noopener" data-reveal>
+      <span>Read the reviews on Google</span><Icon name="arrow-up-right" />
+    </a>
+
+    {reviews.length > 0 && (
+      <ul class="quotes" role="list">
+        {reviews.map((q) => (
+          <li class="quote" data-reveal>
+            <blockquote><p>“{q.quote}”</p></blockquote>
+            <p class="label muted"><a href={q.url} target="_blank" rel="noopener">{q.author} · Google review · {q.date}</a></p>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style>
+  .trust { background: var(--ink-2); border-block: 1px solid var(--line); }
+  .trust-grid { row-gap: clamp(2rem, 4vw, 3rem); align-items: start; }
+  .trust-index { grid-column: 1 / -1; }
+  .trust-title { grid-column: 1 / span 6; font-size: var(--t-3xl); }
+  .trust-body { grid-column: 8 / span 5; display: grid; gap: var(--s-6); justify-items: start; }
+  .rating {
+    display: flex; align-items: center; gap: var(--s-5); padding-block: var(--s-5);
+    border-block: 1px solid var(--line); width: 100%; text-decoration: none;
+  }
+  .rating-value { font-size: clamp(4rem, 3rem + 4vw, 6.5rem); line-height: 0.85; }
+  .rating-meta { display: grid; gap: var(--s-2); }
+  .rating-stars { display: flex; gap: 2px; color: var(--graphite); }
+  .rating-stars :global(svg) { width: 20px; height: 20px; }
+  .rating-stars :global(svg.on) { color: var(--ember); fill: var(--ember); }
+  .rating--pending { display: grid; gap: var(--s-2); border-block-style: dashed; font-size: var(--t-sm); }
+  .trust-link {
+    grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: var(--s-5);
+    padding-block: clamp(1.25rem, 3vw, 2rem); border-block: 1px solid var(--line); text-decoration: none;
+    font-size: clamp(1.75rem, 0.8rem + 4vw, 4.5rem); line-height: 1; transition: color 0.3s var(--ease);
+  }
+  .trust-link :global(svg) { flex: none; width: 0.8em; height: 0.8em; color: var(--ember); transition: transform 0.4s var(--ease); }
+  .trust-link:hover { color: var(--ember); }
+  .trust-link:hover :global(svg) { transform: translate(6px, -6px); }
+  .quotes { grid-column: 1 / -1; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--s-6); }
+  .quote blockquote { margin: 0 0 var(--s-4); font-size: var(--t-lg); line-height: 1.45; }
+  @media (max-width: 900px) { .trust-title, .trust-body { grid-column: 1 / -1; } }
+</style>

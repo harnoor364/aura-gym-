@@ -1,0 +1,55 @@
+---
+import Photo from "./Photo.astro";
+import Icon from "./Icon.astro";
+---
+<section class="section on-bone club" id="club" aria-labelledby="club-title">
+  <div class="wrap grid club-grid">
+    <p class="index-label label club-index" data-reveal><b>01</b> The club</p>
+
+    <h2 class="club-title" id="club-title" data-reveal>
+      A neighbourhood training floor for people who <span class="accent">keep showing up</span> — first-timers finding their footing, regulars building on last week, and everyone in between.
+    </h2>
+
+    <figure class="club-photo" data-reveal>
+      <div class="club-photo-frame"><Photo slot="club" sizes="(min-width: 900px) 34vw, 90vw" number="02" /></div>
+    </figure>
+
+    <div class="club-aside" data-reveal>
+      <p class="muted">
+        The best way to judge a gym is to stand on its floor. Call ahead, come by Lodhi Club Road and look around before you decide.
+      </p>
+      <a class="link-arrow" href="#location">Plan a visit <Icon name="arrow-up-right" /></a>
+    </div>
+
+    <ul class="club-words display" aria-label="What we stand for">
+      <li>Strength</li><li>Discipline</li><li>Energy</li><li>Community</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .club-grid { row-gap: clamp(2.5rem, 5vw, 4.5rem); align-items: start; }
+  .club-index { grid-column: 1 / -1; }
+  .club-title {
+    grid-column: 1 / span 8;
+    font-size: var(--t-2xl); font-weight: 500; line-height: 1.12; letter-spacing: -0.02em;
+  }
+  .club-photo { grid-column: 9 / span 4; grid-row: 2 / span 2; margin: 0; }
+  .club-photo-frame { aspect-ratio: 4 / 5; overflow: hidden; }
+  .club-aside { grid-column: 1 / span 5; display: grid; gap: var(--s-5); justify-items: start; max-width: 44ch; }
+  .club-words {
+    grid-column: 1 / -1; list-style: none;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--s-6);
+    padding-top: clamp(1.5rem, 3vw, 2.5rem); border-top: 1px solid var(--line-dark);
+    font-size: clamp(2.25rem, 0.8rem + 4.6vw, 5.25rem); color: var(--ink);
+  }
+  .club-words li:nth-child(even) { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+
+  @media (max-width: 900px) {
+    .club-title { grid-column: 1 / -1; }
+    .club-photo { grid-column: 4 / -1; grid-row: auto; }
+    .club-aside { grid-column: 1 / -1; }
+    .club-words { justify-content: flex-start; }
+  }
+  @media (max-width: 560px) { .club-photo { grid-column: 1 / -1; } }
+</style>

@@ -1,0 +1,94 @@
+---
+import Photo from "./Photo.astro";
+import Icon from "./Icon.astro";
+import { programmes, askAbout } from "../data/site";
+---
+<section class="section on-bone training" id="training" aria-labelledby="training-title">
+  <div class="wrap">
+    <header class="grid tr-head">
+      <p class="index-label label" data-reveal><b>03</b> Training</p>
+      <h2 class="display h2 tr-title" id="training-title" data-reveal>Train with intent.</h2>
+    </header>
+
+    {programmes.map((p, i) => (
+      <article class:list={["grid prog", i % 2 ? "prog--flip" : ""]} aria-labelledby={`prog-${p.id}`}>
+        <div class="prog-media" data-reveal>
+          <div class="prog-frame"><Photo slot={p.photo} sizes="(min-width: 900px) 52vw, 100vw" number={String(7 + i).padStart(2, "0")} /></div>
+        </div>
+        <div class="prog-copy" data-reveal>
+          <span class="prog-num display" aria-hidden="true">{p.index}</span>
+          <p class="label muted">{p.kicker}</p>
+          <h3 class="prog-title display" id={`prog-${p.id}`}>{p.title}</h3>
+          <p class="prog-body">{p.body}</p>
+        </div>
+      </article>
+    ))}
+
+    <div class="grid ask">
+      <div class="ask-intro" data-reveal>
+        <p class="label accent">Ask at the front desk</p>
+        <h3 class="h3">More ways to train — confirm what runs at BRS Nagar.</h3>
+        <p class="muted">Availability and timings vary, so we would rather you hear them from the branch than read a promise here.</p>
+      </div>
+      <ul class="ask-list" role="list">
+        {askAbout.map((a) => (
+          <li class="ask-row" data-reveal>
+            <span class="ask-title display">{a.title}</span>
+            <span class="ask-note muted">{a.note}</span>
+            <a class="ask-link" href="#contact" aria-label={`Enquire about ${a.title}`}><Icon name="arrow-up-right" /></a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tr-head { row-gap: var(--s-5); margin-bottom: clamp(3rem, 7vw, 6rem); }
+  .tr-head .index-label, .tr-title { grid-column: 1 / -1; }
+
+  .prog { align-items: center; row-gap: var(--s-6); margin-bottom: clamp(4rem, 9vw, 8rem); }
+  .prog-media { grid-column: 1 / span 7; }
+  .prog-frame { aspect-ratio: 5 / 4; overflow: hidden; }
+  .prog-copy { grid-column: 9 / span 4; display: grid; gap: var(--s-4); position: relative; }
+  .prog-num {
+    font-size: clamp(5rem, 3rem + 7vw, 10rem); line-height: 0.8; color: transparent;
+    -webkit-text-stroke: 1.5px var(--ember-deep); margin-bottom: var(--s-4);
+  }
+  .prog-title { font-size: var(--t-2xl); line-height: 0.92; }
+  .prog-body { font-size: var(--t-lg); line-height: 1.55; color: #2e2c29; max-width: 36ch; }
+
+  .prog--flip .prog-media { grid-column: 6 / span 7; grid-row: 1; }
+  .prog--flip .prog-frame { aspect-ratio: 4 / 5; max-height: 820px; width: 78%; margin-left: auto; }
+  .prog--flip .prog-copy { grid-column: 1 / span 4; grid-row: 1; align-self: end; padding-bottom: 8%; }
+
+  .ask { border-top: 1px solid var(--ink); padding-top: clamp(2rem, 4vw, 3rem); row-gap: var(--s-6); }
+  .ask-intro { grid-column: 1 / span 4; display: grid; gap: var(--s-4); align-content: start; }
+  .ask-list { grid-column: 6 / span 7; list-style: none; }
+  .ask-row {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: var(--s-5); align-items: center;
+    padding-block: 1.4rem; border-bottom: 1px solid var(--line-dark);
+  }
+  .ask-row:first-child { padding-top: 0; }
+  .ask-title { font-size: var(--t-xl); line-height: 1; }
+  .ask-note { font-size: var(--t-sm); }
+  .ask-link {
+    display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line-dark);
+    color: var(--ink); transition: background 0.25s var(--ease), color 0.25s var(--ease);
+  }
+  .ask-link :global(svg) { width: 18px; height: 18px; }
+  .ask-link:hover { background: var(--ink); color: var(--bone); }
+
+  @media (max-width: 900px) {
+    .prog-media, .prog--flip .prog-media { grid-column: 1 / -1; grid-row: auto; }
+    .prog--flip .prog-frame { width: 100%; aspect-ratio: 4 / 5; max-height: 70svh; }
+    .prog-copy, .prog--flip .prog-copy { grid-column: 1 / -1; grid-row: auto; padding-bottom: 0; }
+    .prog-num { font-size: 4rem; margin-bottom: 0; }
+    .ask-intro, .ask-list { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .ask-row { grid-template-columns: minmax(0, 1fr) auto; }
+    .ask-note { grid-column: 1; grid-row: 2; }
+    .ask-link { grid-row: 1 / span 2; grid-column: 2; }
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+import Photo from "./Photo.astro";
+import Icon from "./Icon.astro";
+import { mapsLinks } from "../data/site";
+---
+<section class="section facilities" id="facilities" aria-labelledby="facilities-title">
+  <div class="wrap">
+    <header class="grid fac-head">
+      <p class="index-label label" data-reveal><b>02</b> Facilities</p>
+      <h2 class="display h2 fac-title" id="facilities-title" data-reveal>The floor.</h2>
+      <p class="lede muted fac-lede" data-reveal>Room to lift, condition and move. Take a look around — then come and see it in person.</p>
+    </header>
+
+    <div class="fac-grid">
+      <figure class="fac-item fac-a" data-reveal>
+        <div class="fac-frame"><Photo slot="floor" sizes="(min-width: 900px) 62vw, 100vw" number="03" /></div>
+        <figcaption class="fac-cap"><span class="label accent">A</span> Training floor</figcaption>
+      </figure>
+      <figure class="fac-item fac-b" data-reveal>
+        <div class="fac-frame"><Photo slot="detail-plates" sizes="(min-width: 900px) 30vw, 50vw" number="04" /></div>
+        <figcaption class="fac-cap"><span class="label accent">B</span> Plates &amp; free weights</figcaption>
+      </figure>
+      <figure class="fac-item fac-c" data-reveal>
+        <div class="fac-frame"><Photo slot="cardio" sizes="(min-width: 900px) 30vw, 50vw" number="05" /></div>
+        <figcaption class="fac-cap"><span class="label accent">C</span> Cardio line</figcaption>
+      </figure>
+
+      <div class="fac-note" data-reveal>
+        <p class="h3">On Lodhi Club Road, opposite G.S. Memorial School.</p>
+        <a class="link-arrow" href={mapsLinks.directions} target="_blank" rel="noopener">Get directions <Icon name="arrow-up-right" /></a>
+      </div>
+      <figure class="fac-item fac-d" data-reveal>
+        <div class="fac-frame"><Photo slot="front" sizes="(min-width: 900px) 62vw, 100vw" number="06" /></div>
+        <figcaption class="fac-cap"><span class="label accent">D</span> The entrance</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .facilities { background: var(--ink); }
+  .fac-head { row-gap: var(--s-5); margin-bottom: clamp(2.5rem, 6vw, 5rem); align-items: end; }
+  .fac-head .index-label { grid-column: 1 / -1; }
+  .fac-title { grid-column: 1 / span 7; }
+  .fac-lede { grid-column: 9 / span 4; }
+
+  .fac-grid {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem); row-gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  .fac-item { margin: 0; display: grid; gap: var(--s-3); }
+  .fac-frame { overflow: hidden; height: 100%; }
+  .fac-frame :global(.photo) { transition: transform 1.2s var(--ease); }
+  .fac-item:hover .fac-frame :global(img.photo) { transform: scale(1.03); }
+  .fac-cap { display: flex; gap: var(--s-3); align-items: baseline; font-size: var(--t-sm); color: var(--ash); }
+
+  .fac-a { grid-column: 1 / span 8; grid-row: 1 / span 2; grid-template-rows: 1fr auto; }
+  .fac-a .fac-frame { aspect-ratio: auto; min-height: 100%; }
+  .fac-b { grid-column: 9 / span 4; }
+  .fac-b .fac-frame { aspect-ratio: 1; }
+  .fac-c { grid-column: 9 / span 4; }
+  .fac-c .fac-frame { aspect-ratio: 4 / 3; }
+  .fac-note { grid-column: 1 / span 3; align-self: end; display: grid; gap: var(--s-5); justify-items: start; padding-bottom: 2.5rem; }
+  .fac-d { grid-column: 5 / span 8; }
+  .fac-d .fac-frame { aspect-ratio: 21 / 9; }
+
+  @media (max-width: 560px) { .fac-b :global(.ph-brief), .fac-c :global(.ph-brief) { display: none; } }
+  @media (max-width: 900px) {
+    .fac-title { grid-column: 1 / -1; }
+    .fac-lede { grid-column: 1 / -1; }
+    .fac-a { grid-column: 1 / -1; grid-row: auto; }
+    .fac-a .fac-frame { aspect-ratio: 4 / 3; }
+    .fac-b { grid-column: 1 / span 6; }
+    .fac-c { grid-column: 7 / span 6; }
+    .fac-c .fac-frame { aspect-ratio: 1; }
+    .fac-note { grid-column: 1 / -1; padding-bottom: 0; order: 1; }
+    .fac-d { grid-column: 1 / -1; }
+    .fac-d .fac-frame { aspect-ratio: 16 / 9; }
+  }
+</style>

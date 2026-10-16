@@ -1,0 +1,18 @@
+---
+import Base from "../layouts/Base.astro";
+import Wordmark from "../components/Wordmark.astro";
+import Icon from "../components/Icon.astro";
+---
+<Base title="Page not found · Aura Gym BRS Nagar" description="This page could not be found." path="/404" noindex>
+  <main id="main" class="nf wrap">
+    <a href="/" aria-label="Aura Gym BRS Nagar home"><Wordmark /></a>
+    <p class="label accent">Error 404</p>
+    <h1 class="display nf-title">Wrong rack.</h1>
+    <p class="lede muted">The page you are looking for is not here. Head back to the main floor.</p>
+    <a class="btn" href="/">Back to the homepage <Icon name="arrow" /></a>
+  </main>
+</Base>
+<style>
+  .nf { min-height: 100svh; display: grid; align-content: center; justify-items: start; gap: var(--s-6); padding-block: var(--s-9); }
+  .nf-title { font-size: var(--t-hero); }
+</style>

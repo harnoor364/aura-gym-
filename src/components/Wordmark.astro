@@ -1,0 +1,20 @@
+---
+/**
+ * Placeholder wordmark set in the site typeface. Replace with Aura Gym's
+ * approved logo files (SVG) once supplied — see README → Brand assets.
+ */
+interface Props { size?: "sm" | "lg"; }
+const { size = "sm" } = Astro.props;
+---
+<span class:list={["wordmark", `wordmark--${size}`]}>
+  <span class="wordmark-main">Aura</span><span class="wordmark-sub">Gym<span aria-hidden="true"> · </span><span class="wordmark-branch">BRS Nagar</span></span>
+</span>
+<style>
+  .wordmark { display: inline-flex; align-items: baseline; gap: 0.55em; line-height: 1; white-space: nowrap; }
+  .wordmark-main { font-stretch: 68%; font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em; font-size: 1.75rem; }
+  .wordmark-sub { font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ash); }
+  .wordmark-branch { color: var(--ember); }
+  .wordmark--lg .wordmark-main { font-size: clamp(4.5rem, 2rem + 14vw, 16rem); line-height: 0.8; letter-spacing: -0.01em; }
+  .wordmark--lg { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .wordmark--lg .wordmark-sub { font-size: var(--t-sm); }
+</style>

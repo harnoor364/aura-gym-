@@ -1,0 +1,42 @@
+---
+import Icon from "./Icon.astro";
+import { faqs, site } from "../data/site";
+---
+<section class="section on-bone faq" aria-labelledby="faq-title">
+  <div class="wrap grid faq-grid">
+    <div class="faq-head">
+      <p class="index-label label" data-reveal><b>06</b> Questions</p>
+      <h2 class="display h2" id="faq-title" data-reveal>Before you join.</h2>
+      <p class="muted" data-reveal>Anything else? Call <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a>.</p>
+    </div>
+    <div class="faq-list">
+      {faqs.map((f) => (
+        <details class="faq-item" data-reveal="fade">
+          <summary><span>{f.q}</span><Icon name="plus" class="faq-icon" /></summary>
+          <p class="faq-a">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid { row-gap: var(--s-7); align-items: start; }
+  .faq-head { grid-column: 1 / span 4; display: grid; gap: var(--s-5); position: sticky; top: calc(var(--header-h) + 2rem); }
+  .faq-head a { color: var(--ink); font-weight: 600; }
+  .faq-list { grid-column: 6 / span 7; border-top: 1px solid var(--ink); }
+  .faq-item { border-bottom: 1px solid var(--line-dark); }
+  .faq-item summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-5);
+    min-height: 72px; padding-block: var(--s-5); cursor: pointer; list-style: none;
+    font-size: var(--t-lg); font-weight: 600; letter-spacing: -0.01em;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary :global(.faq-icon) { flex: none; width: 22px; height: 22px; transition: transform 0.3s var(--ease); color: var(--ember-deep); }
+  .faq-item[open] summary :global(.faq-icon) { transform: rotate(45deg); }
+  .faq-a { padding-bottom: var(--s-6); max-width: 56ch; color: #2e2c29; }
+  @media (max-width: 900px) {
+    .faq-head { grid-column: 1 / -1; position: static; }
+    .faq-list { grid-column: 1 / -1; }
+  }
+</style>

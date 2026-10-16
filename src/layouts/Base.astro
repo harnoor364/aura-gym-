@@ -1,0 +1,72 @@
+---
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource/ibm-plex-mono/500.css";
+import "../styles/global.css";
+import { site, fullAddress, mapsLinks } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+}
+const { title, description, path = "/", noindex = site.preview } = Astro.props;
+const canonical = new URL(path, site.url).toString();
+const ogImage = new URL("/og-image.jpg", site.url).toString();
+
+// Structured data: only facts supplied/verified. Rating, hours and services are
+// added once verified (see README).
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ExerciseGym",
+  name: site.fullName,
+  url: canonical,
+  telephone: site.phone.tel,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: `${site.address.street}, ${site.address.area}`,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  hasMap: mapsLinks.listing,
+  ...(site.rating.verified && {
+    aggregateRating: { "@type": "AggregateRating", ratingValue: site.rating.value, reviewCount: site.rating.count },
+  }),
+};
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0d0d0c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="geo.region" content="IN-PB" />
+    <meta name="geo.placename" content="Ludhiana" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>document.documentElement.classList.add("js");</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>
